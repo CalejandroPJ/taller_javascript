@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wiki Pokémon</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen flex flex-col">
+
+    <!-- HEADER -->
+    <header class="bg-white shadow py-6">
+        <div class="container mx-auto px-4 text-center">
+            <h1 class="text-4xl font-bold text-blue-600 mb-2">Wiki Pokémon ⚡</h1>
+            <p class="text-gray-600">Descubre el mundo de los Pokémon</p>
+        </div>
+    </header>
+
+    <!-- MAIN LAYOUT -->
+    <div class="flex-1 container mx-auto px-4 py-8 flex flex-col lg:flex-row gap-6">
+        
+        <!-- SIDEBAR -->
+        <aside class="w-full lg:w-1/4 hidden lg:block">
+            <div class="bg-white rounded shadow p-4">
+                <h2 class="text-xl font-semibold mb-2">Filtros</h2>
+                <p class="text-gray-500 text-sm">Aquí puedes agregar filtros por tipo, generación, etc.</p>
+            </div>
+        </aside>
+
+        <!-- MAIN CONTENT -->
+        <main class="w-full lg:flex-1 flex flex-col gap-6">
+
+            <!-- Controles de paginación -->
+            <div class="flex justify-center space-x-4">
+                <button id="prevBtn" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 disabled:bg-gray-400">
+                    Anterior
+                </button>
+                <span id="pageInfo" class="flex items-center px-4 py-2 bg-white rounded shadow">
+                    Página 1
+                </span>
+                <button id="nextBtn" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+                    Siguiente
+                </button>
+            </div>
+
+            <!-- Tabla de Pokémon -->
+            <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+                <table class="w-full">
+                    <thead class="bg-blue-500 text-white">
+                        <tr>
+                            <th class="px-6 py-3 text-left">ID</th>
+                            <th class="px-6 py-3 text-left">Imagen</th>
+                            <th class="px-6 py-3 text-left">Nombre</th>
+                            <th class="px-6 py-3 text-left">Tipos</th>
+                            <th class="px-6 py-3 text-left">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="pokemonTableBody">
+                        <!-- Los datos se cargarán aquí dinámicamente -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Loading indicator -->
+            <div id="loading" class="text-center py-8 hidden">
+                <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
+                <p class="mt-2 text-gray-600">Cargando Pokémon...</p>
+            </div>
+        </main>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="bg-white text-center py-6 text-gray-500 text-sm mt-auto">
+        &copy; 2025 Wiki Pokémon. Todos los derechos reservados.
+    </footer>
+
+    <!-- MODAL para detalles del Pokémon -->
+    <div id="pokemonModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+        <div class="bg-white rounded-lg p-6 max-w-md w-full mx-4 max-h-96 overflow-y-auto">
+            <div class="flex justify-between items-center mb-4">
+                <h2 id="modalTitle" class="text-2xl font-bold text-blue-600"></h2>
+                <button id="closeModal" class="text-gray-500 hover:text-gray-700 text-2xl">&times;</button>
+            </div>
+            <div id="modalContent">
+                <!-- El contenido del modal se cargará aquí -->
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
