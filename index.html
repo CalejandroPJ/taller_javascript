@@ -1,92 +1,121 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wiki Pokémon</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>PokéDex Alola</title>
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-100 min-h-screen flex flex-col">
+<body class="bg-gradient-to-br from-purple-100 to-blue-100 min-h-screen font-sans">
 
-    <!-- HEADER -->
-    <header class="bg-white shadow py-6">
-        <div class="container mx-auto px-4 text-center">
-            <h1 class="text-4xl font-bold text-blue-600 mb-2">Wiki Pokémon ⚡</h1>
-            <p class="text-gray-600">Descubre el mundo de los Pokémon</p>
-        </div>
-    </header>
-
-    <!-- MAIN LAYOUT -->
-    <div class="flex-1 container mx-auto px-4 py-8 flex flex-col lg:flex-row gap-6">
-        
-        <!-- SIDEBAR -->
-        <aside class="w-full lg:w-1/4 hidden lg:block">
-            <div class="bg-white rounded shadow p-4">
-                <h2 class="text-xl font-semibold mb-2">Filtros</h2>
-                <p class="text-gray-500 text-sm">Aquí puedes agregar filtros por tipo, generación, etc.</p>
-            </div>
-        </aside>
-
-        <!-- MAIN CONTENT -->
-        <main class="w-full lg:flex-1 flex flex-col gap-6">
-
-            <!-- Controles de paginación -->
-            <div class="flex justify-center space-x-4">
-                <button id="prevBtn" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 disabled:bg-gray-400">
-                    Anterior
-                </button>
-                <span id="pageInfo" class="flex items-center px-4 py-2 bg-white rounded shadow">
-                    Página 1
-                </span>
-                <button id="nextBtn" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
-                    Siguiente
-                </button>
-            </div>
-
-            <!-- Tabla de Pokémon -->
-            <div class="bg-white rounded-lg shadow-lg overflow-hidden">
-                <table class="w-full">
-                    <thead class="bg-blue-500 text-white">
-                        <tr>
-                            <th class="px-6 py-3 text-left">ID</th>
-                            <th class="px-6 py-3 text-left">Imagen</th>
-                            <th class="px-6 py-3 text-left">Nombre</th>
-                            <th class="px-6 py-3 text-left">Tipos</th>
-                            <th class="px-6 py-3 text-left">Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody id="pokemonTableBody">
-                        <!-- Los datos se cargarán aquí dinámicamente -->
-                    </tbody>
-                </table>
-            </div>
-
-            <!-- Loading indicator -->
-            <div id="loading" class="text-center py-8 hidden">
-                <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
-                <p class="mt-2 text-gray-600">Cargando Pokémon...</p>
-            </div>
-        </main>
+  <!-- HEADER -->
+  <header class="bg-gradient-to-r from-red-500 to-blue-600 shadow-lg py-6 px-4">
+    <div class="max-w-7xl mx-auto flex justify-between items-center">
+      <h1 class="text-3xl font-extrabold text-white flex items-center gap-2">
+        📍 PokeDex: Wiki Pokemon <span class="text-2xl">📍</span>
+      </h1>
+      <div class="flex items-center gap-4">
+        <span class="bg-purple-600 text-white rounded-full px-4 py-1 text-sm font-medium">
+          Total: <span id="totalCount">0</span>
+        </span>
+        <span class="bg-indigo-600 text-white rounded-full px-4 py-1 text-sm font-medium">
+          Página: <span id="currentPageLabel">1</span>
+        </span>
+      </div>
     </div>
+  </header>
 
-    <!-- FOOTER -->
-    <footer class="bg-white text-center py-6 text-gray-500 text-sm mt-auto">
-        &copy; 2025 Wiki Pokémon. Todos los derechos reservados.
-    </footer>
+  <!-- MAIN -->
+  <main class="max-w-7xl mx-auto p-4 flex flex-col lg:flex-row gap-6">
+    
+    <!-- SIDEBAR -->
+    <aside class="w-full lg:w-1/4 space-y-6">
+      <!-- Search -->
+      <div class="bg-white rounded-xl shadow p-4">
+        <h2 class="text-lg font-semibold text-gray-700 mb-2">🔍 Buscar Pokémon</h2>
+        <input
+          type="text"
+          id="searchInput"
+          placeholder="Buscar por nombre..."
+          class="w-full border border-gray-300 rounded-full py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-400"
+        />
+      </div>
 
-    <!-- MODAL para detalles del Pokémon -->
-    <div id="pokemonModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
-        <div class="bg-white rounded-lg p-6 max-w-md w-full mx-4 max-h-96 overflow-y-auto">
-            <div class="flex justify-between items-center mb-4">
-                <h2 id="modalTitle" class="text-2xl font-bold text-blue-600"></h2>
-                <button id="closeModal" class="text-gray-500 hover:text-gray-700 text-2xl">&times;</button>
-            </div>
-            <div id="modalContent">
-                <!-- El contenido del modal se cargará aquí -->
-            </div>
+      <!-- Filtros -->
+      <div class="bg-white rounded-xl shadow p-4">
+        <h2 class="text-lg font-semibold text-gray-700 mb-4">🏷️ Filtrar por Tipo</h2>
+        <div id="typeChips" class="flex flex-wrap gap-2">
+          <!-- Chips dinámicos -->
         </div>
-    </div>
+        <button
+          id="clearFiltersBtn"
+          class="mt-4 w-full bg-red-500 text-white py-2 rounded hover:bg-red-600 text-sm"
+        >
+          Limpiar Filtros
+        </button>
+      </div>
+    </aside>
 
-    <script src="script.js"></script>
+    <!-- CONTENIDO PRINCIPAL -->
+    <section class="w-full lg:flex-1 flex flex-col">
+      
+      <!-- Controles -->
+      <div class="flex justify-center lg:justify-between items-center mb-6 flex-wrap gap-4">
+        <div class="flex gap-3">
+          <button id="prevBtn" class="bg-gray-300 text-gray-700 px-4 py-2 rounded-full disabled:opacity-50">
+            ← Anterior
+          </button>
+          <span id="pageInfo" class="bg-white shadow px-4 py-2 rounded-full text-gray-700">
+            Página 1 de 1
+          </span>
+          <button id="nextBtn" class="bg-yellow-400 text-white px-4 py-2 rounded-full hover:bg-yellow-500">
+            Siguiente →
+          </button>
+        </div>
+      </div>
+
+      <!-- Grid de Pokémon -->
+      <div id="pokemonGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        <!-- Tarjetas de Pokémon se cargan aquí -->
+      </div>
+
+      <!-- Cargando -->
+      <div id="loading" class="text-center py-8 hidden">
+        <div class="inline-block animate-spin rounded-full h-10 w-10 border-b-4 border-blue-500"></div>
+        <p class="mt-2 text-gray-600">Cargando Pokémon...</p>
+      </div>
+    </section>
+  </main>
+
+  <!-- MODAL -->
+  <div id="pokemonModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+    <div class="bg-white rounded-lg p-6 max-w-md w-full mx-4 max-h-[90vh] overflow-y-auto">
+      <div class="flex justify-between items-center mb-4">
+        <h2 id="modalTitle" class="text-2xl font-bold text-blue-600"></h2>
+        <button id="closeModal" class="text-gray-500 hover:text-gray-700 text-2xl">&times;</button>
+      </div>
+      <div id="modalContent">
+        <!-- Detalles del Pokémon se cargan aquí -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Script -->
+  <script src="script.js"></script>
+
+  <!-- FOOTER -->
+<footer class="bg-gray-800 text-white mt-12 py-6">
+  <div class="max-w-7xl mx-auto px-4 flex flex-col md:flex-row items-center justify-between gap-4">
+    <p class="text-sm text-center md:text-left">
+      © 2025 PokéDex Wiki Pokemon — Todos los derechos reservados.
+    </p>
+    <div class="flex gap-4 text-sm">
+      <a href="#" class="hover:underline text-blue-400">Política de Privacidad</a>
+      <a href="#" class="hover:underline text-blue-400">Términos de Uso</a>
+      <a href="https://pokeapi.co/" target="_blank" class="hover:underline text-blue-400">Powered by PokéAPI</a>
+    </div>
+  </div>
+</footer>
+
 </body>
 </html>
